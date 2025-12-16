@@ -1,0 +1,5 @@
+"inp_dim_node": 384
+"out_dim_node": 64
+"inp_dim_edge": 384
+"out_dim_edge": 32
+"heads": 8
