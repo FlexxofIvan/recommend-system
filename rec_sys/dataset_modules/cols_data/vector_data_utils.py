@@ -1,4 +1,5 @@
 from typing import Callable, List
+
 import numpy as np
 import polars as pl
 from tqdm import tqdm
@@ -102,4 +103,3 @@ def vectorize_df(
         data_dict[field] = vectorized_field
 
     return pl.DataFrame(data_dict)
-

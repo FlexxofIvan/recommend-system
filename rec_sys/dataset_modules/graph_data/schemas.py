@@ -1,12 +1,20 @@
-from pydantic import BaseModel, ConfigDict, field_validator
-import polars as pl
-import torch
-from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (FEAT_PRODUCT_INFO, FEAT_PRODUCT_NAME,
-                                                                FEAT_COMMENT, VER_FLAG, TARGET)
-from torch_geometric.data import HeteroData
 from dataclasses import dataclass, field
 from typing import Dict
-from rec_sys.dataset_modules.graph_data.graph_dataset_constants import template
+
+import polars as pl
+import torch
+from pydantic import BaseModel, ConfigDict, field_validator
+from torch_geometric.data import HeteroData
+
+from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (
+    FEAT_COMMENT,
+    FEAT_PRODUCT_INFO,
+    FEAT_PRODUCT_NAME,
+    TARGET,
+    VER_FLAG,
+    template,
+)
+
 
 class UserRow(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -35,7 +43,9 @@ class UserRow(BaseModel):
 
     def to_tensors(self):
         def series_to_tensor(s: pl.Series):
-            if str(s.dtype).startswith("Array(Float32") or str(s.dtype).startswith("Array(Float64"):
+            if str(s.dtype).startswith("Array(Float32") or str(s.dtype).startswith(
+                "Array(Float64"
+            ):
                 return torch.tensor(s, dtype=torch.float32)
             elif s.dtype == pl.Boolean:
                 return torch.tensor(s, dtype=torch.bool)
@@ -51,8 +61,6 @@ class UserRow(BaseModel):
         }
 
 
-
-
 @dataclass
 class EdgeData:
     src: str
@@ -61,10 +69,12 @@ class EdgeData:
     edge_index: torch.Tensor
     edge_features: Dict[str, torch.Tensor] = field(default_factory=dict)
 
+
 @dataclass
 class NodeData:
     features: Dict[str, torch.Tensor]
     num_nodes: int
+
 
 class HeteroGraphBuilder:
     def __init__(self, template: dict = template):
@@ -79,7 +89,9 @@ class HeteroGraphBuilder:
 
     def add_edge(self, edge_data: EdgeData):
         """Добавляет ребро с edge_index и edge_features"""
-        self.graph[edge_data.src, edge_data.rel, edge_data.dst].edge_index = edge_data.edge_index
+        self.graph[edge_data.src, edge_data.rel, edge_data.dst].edge_index = (
+            edge_data.edge_index
+        )
         for feat_name, tensor in edge_data.edge_features.items():
             self.graph[edge_data.src, edge_data.rel, edge_data.dst][feat_name] = tensor
 
@@ -106,5 +118,5 @@ class HeteroGraphBuilder:
 
     def get_graph(self):
         if not self.check_structure():
-            raise ValueError('does not template')
+            raise ValueError("does not template")
         return self.graph

@@ -1,4 +1,5 @@
 from typing import Dict
+
 import torch
 
 
@@ -6,6 +7,7 @@ def split_train_test(n: int, ratio: float):
     test_n = max(1, int(n * ratio))
     train_n = n - test_n
     return train_n, test_n
+
 
 def split_tensors(tensors: Dict[str, torch.Tensor], ratio: float):
     """
@@ -39,6 +41,12 @@ def split_tensors(tensors: Dict[str, torch.Tensor], ratio: float):
 
     return train, test, (train_n, test_n)
 
-def make_edges(n: int):
-    return torch.cat([torch.arange(n, dtype=int).unsqueeze(0), torch.zeros(n, dtype=int).unsqueeze(0)], dim=0)
 
+def make_edges(n: int):
+    return torch.cat(
+        [
+            torch.arange(n, dtype=int).unsqueeze(0),
+            torch.zeros(n, dtype=int).unsqueeze(0),
+        ],
+        dim=0,
+    )

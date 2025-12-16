@@ -1,12 +1,12 @@
-from omegaconf import DictConfig
 from pathlib import Path
 
+import torch
+from omegaconf import DictConfig
 from torch.utils.data import random_split
 
 from rec_sys.dataset_modules.cols_data.create_parquet import preprocess_to_parquet
 from rec_sys.dataset_modules.dataset import HeteroDataLoader
 from rec_sys.dataset_modules.graph_data.create_graphs import build_user_graphs
-import torch
 
 
 def create_loader(cfg: DictConfig):
@@ -30,10 +30,10 @@ def create_loader(cfg: DictConfig):
     out_graph_file.mkdir(parents=True, exist_ok=True)
     if not any(out_graph_file.iterdir()):
         graph_kwargs = {
-                        "user_dir": Path(cfg.dirs.unique_user_data),
-                        "save_dir": out_graph_file,
-                        "eval_ratio": cfg.dataset.eval_ratio
-                        }
+            "user_dir": Path(cfg.dirs.unique_user_data),
+            "save_dir": out_graph_file,
+            "eval_ratio": cfg.dataset.eval_ratio,
+        }
         build_user_graphs(**graph_kwargs)
 
     graphs_list = []
@@ -47,7 +47,11 @@ def create_loader(cfg: DictConfig):
     train_size = full_size - test_size
 
     train_dataset, test_dataset = random_split(graphs_list, [train_size, test_size])
-    train_loader = HeteroDataLoader(train_dataset, batch_size=cfg.dataset.batch_size, shuffle=True)
-    test_loader = HeteroDataLoader(test_dataset, batch_size=cfg.dataset.batch_size, shuffle=False)
+    train_loader = HeteroDataLoader(
+        train_dataset, batch_size=cfg.dataset.batch_size, shuffle=True
+    )
+    test_loader = HeteroDataLoader(
+        test_dataset, batch_size=cfg.dataset.batch_size, shuffle=False
+    )
 
     return train_loader, test_loader

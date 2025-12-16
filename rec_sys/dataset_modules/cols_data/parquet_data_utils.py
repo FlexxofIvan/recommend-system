@@ -1,11 +1,11 @@
-from typing import Union
 from pathlib import Path
+from typing import Union
+
 import polars as pl
 
 
 def build_review_dataset(
-    reviews_path: Union[str, Path],
-    metadata: pl.DataFrame
+    reviews_path: Union[str, Path], metadata: pl.DataFrame
 ) -> Path:
     """
     Build a clean review dataset by merging review JSONL data
@@ -46,8 +46,7 @@ def build_review_dataset(
     reviews = pl.read_ndjson(reviews_path)
 
     df = (
-        reviews
-        .select(
+        reviews.select(
             [
                 pl.col("reviewerID").alias("customer_id"),
                 "asin",
@@ -79,10 +78,9 @@ def validate_path(path: Path) -> None:
         raise FileNotFoundError(f"Path does not exist or is not a file: {path}")
 
 
-def load_metadata(mus_file: Path,
-                  max_title_length: int,
-                  max_desc_length: int,
-                  meta_file: Path) -> pl.DataFrame:
+def load_metadata(
+    mus_file: Path, max_title_length: int, max_desc_length: int, meta_file: Path
+) -> pl.DataFrame:
     """
     Load metadata for instruments found in mus_file.
 
@@ -104,11 +102,7 @@ def load_metadata(mus_file: Path,
     validate_path(mus_file)
     validate_path(meta_file)
 
-    mus = (
-        pl.scan_ndjson(mus_file)
-        .select("asin")
-        .unique()
-    )
+    mus = pl.scan_ndjson(mus_file).select("asin").unique()
 
     meta = pl.scan_ndjson(meta_file)
 
@@ -135,5 +129,3 @@ def load_metadata(mus_file: Path,
     )
 
     return result
-
-

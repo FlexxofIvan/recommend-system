@@ -1,8 +1,6 @@
 from pathlib import Path
 from typing import List
 
-from sentence_transformers import SentenceTransformer
-
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 # Directories

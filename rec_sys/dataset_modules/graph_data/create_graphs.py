@@ -2,23 +2,36 @@ from pathlib import Path
 
 import polars as pl
 import torch
-from rec_sys.dataset_modules.graph_data.graph_data_utils import split_tensors
-from rec_sys.dataset_modules.graph_data.graph_data_utils import make_edges
-from rec_sys.dataset_modules.graph_data.schemas import UserRow, HeteroGraphBuilder, NodeData, EdgeData
 
-from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (FEAT_COMMENT,
-                                     FEAT_PRODUCT_NAME, FEAT_PRODUCT_INFO,
-                                     TARGET, USER_EMB,
-                                     PRODUCT_TRAIN_NODE, PRODUCT_TEST_NODE,
-                                     USER_NODE, USER_REL_PRODUCT)
+from rec_sys.dataset_modules.graph_data.graph_data_utils import (
+    make_edges,
+    split_tensors,
+)
+from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (
+    FEAT_COMMENT,
+    FEAT_PRODUCT_INFO,
+    FEAT_PRODUCT_NAME,
+    PRODUCT_TEST_NODE,
+    PRODUCT_TRAIN_NODE,
+    TARGET,
+    USER_EMB,
+    USER_NODE,
+    USER_REL_PRODUCT,
+)
+from rec_sys.dataset_modules.graph_data.schemas import (
+    EdgeData,
+    HeteroGraphBuilder,
+    NodeData,
+    UserRow,
+)
 
 
 def build_user_graphs(
-        user_dir: Path,
-        save_dir: Path,
-        eval_ratio: float,
-        target_threshold: int = 3,
-        max_class_diff: int = 2
+    user_dir: Path,
+    save_dir: Path,
+    eval_ratio: float,
+    target_threshold: int = 3,
+    max_class_diff: int = 2,
 ):
     """
     Строит графы для пользователей из parquet файлов и сохраняет их.
@@ -42,10 +55,7 @@ def build_user_graphs(
             print(f"[WARN] size mismatch in {file}")
             continue
 
-        train, test, (train_n, test_n) = split_tensors(
-            features_tensor_dict,
-            eval_ratio
-        )
+        train, test, (train_n, test_n) = split_tensors(features_tensor_dict, eval_ratio)
         if train is None:
             continue
 
@@ -65,18 +75,18 @@ def build_user_graphs(
                 features={
                     FEAT_PRODUCT_NAME: train[FEAT_PRODUCT_NAME],
                     FEAT_PRODUCT_INFO: train[FEAT_PRODUCT_INFO],
-                    TARGET: train[TARGET]
+                    TARGET: train[TARGET],
                 },
-                num_nodes=train_num_nodes
+                num_nodes=train_num_nodes,
             ),
             PRODUCT_TEST_NODE: NodeData(
                 features={
                     FEAT_PRODUCT_NAME: test[FEAT_PRODUCT_NAME],
                     FEAT_PRODUCT_INFO: test[FEAT_PRODUCT_INFO],
-                    TARGET: test[TARGET]
+                    TARGET: test[TARGET],
                 },
-                num_nodes=test_num_nodes
-            )
+                num_nodes=test_num_nodes,
+            ),
         }
 
         edge_index = make_edges(train_num_nodes)
@@ -87,11 +97,11 @@ def build_user_graphs(
                 dst=USER_NODE,
                 rel=USER_REL_PRODUCT,
                 edge_index=edge_index,
-                edge_features={USER_REL_PRODUCT: train[FEAT_COMMENT]}
+                edge_features={USER_REL_PRODUCT: train[FEAT_COMMENT]},
             )
         ]
 
         builder = HeteroGraphBuilder()
         bipart_data = builder.build_graph(nodes_data, edges_data)
-        save_path = save_dir / f'graph_{num}.pt'
+        save_path = save_dir / f"graph_{num}.pt"
         torch.save(bipart_data, save_path)
