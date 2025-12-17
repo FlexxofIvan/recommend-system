@@ -1,3 +1,5 @@
+import json
+import random
 from pathlib import Path
 from typing import Union
 
@@ -129,3 +131,30 @@ def load_metadata(
     )
 
     return result
+
+def split_jsonl_by_user(
+    input_path,
+    train_path,
+    test_path,
+    user_field="reviewerID",
+    test_ratio=0.1,
+    seed=42,
+):
+    random.seed(seed)
+    user_split = {}
+
+    with open(input_path, "r", encoding="utf-8") as fin, \
+         open(train_path, "w", encoding="utf-8") as ftrain, \
+         open(test_path, "w", encoding="utf-8") as ftest:
+
+        for line in fin:
+            obj = json.loads(line)
+            user = obj[user_field]
+
+            if user not in user_split:
+                user_split[user] = random.random() < test_ratio
+
+            if user_split[user]:
+                ftest.write(line)
+            else:
+                ftrain.write(line)
