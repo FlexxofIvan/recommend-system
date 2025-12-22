@@ -50,10 +50,10 @@ def create_loader(cfg: DictConfig):
 
     train_dataset, test_dataset = random_split(graphs_list, [train_size, test_size])
     train_loader = HeteroDataLoader(
-        train_dataset, batch_size=cfg.dataset.batch_size, shuffle=True
+        train_dataset, batch_size=cfg.dataset.batch_size, num_workers=cfg.dataset.num_workers, shuffle=True
     )
     test_loader = HeteroDataLoader(
-        test_dataset, batch_size=cfg.dataset.batch_size, shuffle=False
+        test_dataset, batch_size=cfg.dataset.batch_size, num_workers=cfg.dataset.num_workers, shuffle=False
     )
 
     return train_loader, test_loader

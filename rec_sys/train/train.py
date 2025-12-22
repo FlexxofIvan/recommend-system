@@ -2,6 +2,8 @@ import hydra
 import pytorch_lightning as pl
 import torch
 from omegaconf import DictConfig
+from pathlib import Path
+from datetime import datetime
 
 from rec_sys.dataset_modules.make_dataset import create_loader
 from rec_sys.modules.losses import modified_cos_loss
@@ -29,7 +31,12 @@ def main(cfg: DictConfig):
     )
     trainer.validate(pl_model, dataloaders=test_loader)
     trainer.fit(pl_model, train_dataloaders=train_loader, val_dataloaders=test_loader)
+    now = datetime.now()
+    timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
+    save_dir = Path(cfg.train.save_path)
+    save_dir.mkdir(parents=True, exist_ok=True)
+    trainer.save_checkpoint(save_dir/f"graph_recsys_{timestamp}.ckpt", weights_only=True)
 
 if __name__ == "__main__":
     main()

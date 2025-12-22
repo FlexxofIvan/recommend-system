@@ -2,12 +2,12 @@ from torch_geometric.loader import DataLoader
 
 
 class HeteroDataLoader(DataLoader):
-    def __init__(self, dataset, batch_size=1, shuffle=True, template=None, **kwargs):
+    def __init__(self, dataset, batch_size=1, shuffle=True, num_workers=8, template=None, **kwargs):
         """
         Наследуемся от DataLoader PyG и добавляем проверку структуры.
         template: шаблон для проверки структуры HeteroData
         """
-        super().__init__(dataset, batch_size=batch_size, shuffle=shuffle, **kwargs)
+        super().__init__(dataset, batch_size=batch_size, num_workers=num_workers, shuffle=shuffle, **kwargs)
         self.template = template
 
     def __iter__(self):

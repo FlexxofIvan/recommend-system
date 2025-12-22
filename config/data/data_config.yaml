@@ -33,3 +33,4 @@ dataset:
   user_field: "customer_id"
   batch_size: 64
   test_size: 0.1
+  num_workers: 8
