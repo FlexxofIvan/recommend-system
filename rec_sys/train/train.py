@@ -5,16 +5,16 @@ from omegaconf import DictConfig
 from pathlib import Path
 from datetime import datetime
 
-from rec_sys.dataset_modules.make_dataset import create_loader
+from rec_sys.dataset_modules.make_dataset import create_loaders
 from rec_sys.modules.losses import modified_cos_loss
 from rec_sys.modules.neural_models import GraphModel
 from rec_sys.modules.trainer import GraphRecSysPL
 from pytorch_lightning.loggers import MLFlowLogger
 
 
-@hydra.main(version_base=None, config_path="../../config", config_name="config")
+@hydra.main(version_base=None, config_path="../../config", config_name="train_config")
 def main(cfg: DictConfig):
-    train_loader, test_loader = create_loader(cfg.data)
+    train_loader, test_loader = create_loaders(cfg.data)
     model = GraphModel(**cfg.model)
 
     pl_model = GraphRecSysPL(model=model, loss_fn=modified_cos_loss, lr=cfg.train.lr)

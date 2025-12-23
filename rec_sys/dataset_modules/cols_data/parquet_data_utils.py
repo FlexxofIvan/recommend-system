@@ -50,7 +50,7 @@ def build_review_dataset(
     df = (
         reviews.select(
             [
-                pl.col("reviewerID").alias("customer_id"),
+                pl.col("reviewerID").alias("reviewerID"),
                 "asin",
                 pl.col("overall").alias("score"),
                 pl.col("reviewText").fill_null("none").alias("comment"),
@@ -60,7 +60,7 @@ def build_review_dataset(
         .join(metadata, on="asin", how="inner")
         .select(
             [
-                "customer_id",
+                "reviewerID",
                 "asin",
                 pl.col("name").alias("product_name"),
                 pl.col("description").alias("product_info"),
@@ -136,7 +136,7 @@ def split_jsonl_by_user(
     input_path,
     train_path,
     test_path,
-    user_field="reviewerID",
+    user_field,
     test_ratio=0.1,
     seed=42,
 ):

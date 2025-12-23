@@ -28,4 +28,4 @@ MODEL_NAME = "all-MiniLM-L6-v2"
 WORDS_FIELDS: List[str] = ["product_name", "product_info", "comment"]
 BATCH_EMB_SIZE: int = 64
 
-USER_FIELD = "customer_id"
+USER_FIELD = "reviewerID"

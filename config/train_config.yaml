@@ -1,0 +1,5 @@
+defaults:
+  - data: train_loader
+  - model: model_config
+  - train: train_pars
+  - _self_

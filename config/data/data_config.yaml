@@ -10,19 +10,26 @@ base:
 # Directories
 # -------------------------
 dirs:
-  raw_data: ${data.base.dir}/raw_data
-  processed_data: ${data.base.dir}/dataset
-  unique_user_data: ${data.base.dir}/unique_user_train_data
-  graphs: ${data.base.dir}/pt_train_graphs
+  raw_data: ${base.dir}/raw_data
+  processed_data: ${base.dir}/dataset
+  unique_user_data:
+    train: ${base.dir}/unique_user_train_data
+    test: ${base.dir}/unique_user_test_data
+  graphs:
+    train: ${base.dir}/pt_train_graphs
+    test:  ${base.dir}/pt_test_graphs
 
 # -------------------------
 # Files
 # -------------------------
 files:
-  raw_mus_file: ${data.dirs.raw_data}/mus_train_instr.json
-  raw_metadata_file: ${data.dirs.raw_data}/meta_instr.json
-  dataset_file: ${data.dirs.processed_data}/dataset.parquet
-  metadata_file: ${data.dirs.processed_data}/metadata.parquet
+  raw_mus_file: ${dirs.raw_data}/mus_instr.json
+  mus_file:
+    train: ${dirs.raw_data}/mus_train_instr.json
+    test:  ${dirs.raw_data}/mus_test_instr.json
+  raw_metadata_file: ${dirs.raw_data}/meta_instr.json
+  dataset_file: ${dirs.processed_data}/dataset.parquet
+  metadata_file: ${dirs.processed_data}/metadata.parquet
 
 dataset:
   eval_ratio: 0.2
@@ -30,7 +37,8 @@ dataset:
   max_desc_len: 15
   model_name: "all-MiniLM-L6-v2"
   words_fields: ["product_name", "product_info", "comment"]
-  user_field: "customer_id"
+  user_field: "reviewerID"
   batch_size: 64
   test_size: 0.1
   num_workers: 8
+  seed: 42
