@@ -132,6 +132,7 @@ def load_metadata(
 
     return result
 
+
 def split_jsonl_by_user(
     input_path,
     train_path,
@@ -143,9 +144,11 @@ def split_jsonl_by_user(
     random.seed(seed)
     user_split = {}
 
-    with open(input_path, "r", encoding="utf-8") as fin, \
-         open(train_path, "w", encoding="utf-8") as ftrain, \
-         open(test_path, "w", encoding="utf-8") as ftest:
+    with (
+        open(input_path, "r", encoding="utf-8") as fin,
+        open(train_path, "w", encoding="utf-8") as ftrain,
+        open(test_path, "w", encoding="utf-8") as ftest,
+    ):
 
         for line in fin:
             obj = json.loads(line)

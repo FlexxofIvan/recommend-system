@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from sentence_transformers import SentenceTransformer
 
 from rec_sys.dataset_modules.cols_data.parquet_data_utils import (
@@ -5,8 +7,6 @@ from rec_sys.dataset_modules.cols_data.parquet_data_utils import (
     load_metadata,
 )
 from rec_sys.dataset_modules.cols_data.vector_data_utils import vectorize_df
-
-from pathlib import Path
 
 
 def preprocess_reviews_to_vectorized_df(
@@ -46,7 +46,7 @@ def preprocess_reviews_to_vectorized_df(
         review_df,
         sent_model_call,
         words_fields if words_fields is not None else words_fields,
-        batch_size
+        batch_size,
     )
 
     return vectorized_df
@@ -68,4 +68,3 @@ def save_user_parquet(vectorized_df, user_field: str, unique_user_dir: Path):
     for user_id, df_user in user_groups.items():
         user_path = unique_user_dir / f"{user_id[0]}.parquet"
         df_user.write_parquet(user_path)
-

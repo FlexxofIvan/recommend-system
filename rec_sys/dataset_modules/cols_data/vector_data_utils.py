@@ -46,7 +46,11 @@ def text_to_vec(
     np.ndarray
         Array of embeddings.
     """
-    return model_call(words, batch_size=batch_size, show_progress_bar=False,)
+    return model_call(
+        words,
+        batch_size=batch_size,
+        show_progress_bar=False,
+    )
 
 
 def vectorize_df(

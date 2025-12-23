@@ -1,5 +1,5 @@
 dirs:
-  graphs: /home/ivan/Desktop/RecSys/pt_test_graphs
+  graphs: /home/ivan/Desktop/RecSys/graphs/pt_test_graphs
 
 dataset:
   batch_size: 64

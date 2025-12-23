@@ -1,5 +1,3 @@
-# config.yaml
-
 # -------------------------
 # Base
 # -------------------------
@@ -13,11 +11,11 @@ dirs:
   raw_data: ${base.dir}/raw_data
   processed_data: ${base.dir}/dataset
   unique_user_data:
-    train: ${base.dir}/unique_user_train_data
-    test: ${base.dir}/unique_user_test_data
+    train: ${base.dir}/users_dir/unique_user_train_data
+    test: ${base.dir}/users_dir/unique_user_test_data
   graphs:
-    train: ${base.dir}/pt_train_graphs
-    test:  ${base.dir}/pt_test_graphs
+    train: ${base.dir}/graphs/pt_train_graphs
+    test: ${base.dir}/graphs/pt_test_graphs
 
 # -------------------------
 # Files
@@ -26,7 +24,7 @@ files:
   raw_mus_file: ${dirs.raw_data}/mus_instr.json
   mus_file:
     train: ${dirs.raw_data}/mus_train_instr.json
-    test:  ${dirs.raw_data}/mus_test_instr.json
+    test: ${dirs.raw_data}/mus_test_instr.json
   raw_metadata_file: ${dirs.raw_data}/meta_instr.json
   dataset_file: ${dirs.processed_data}/dataset.parquet
   metadata_file: ${dirs.processed_data}/metadata.parquet

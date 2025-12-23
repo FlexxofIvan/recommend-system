@@ -17,6 +17,7 @@ dependencies = [
     "click==8.3.1",
     "datasets==4.4.1",
     "dill==0.4.0",
+    "dvc[gdrive]>=3.65.0",
     "fasttext>=0.9.3",
     "filelock==3.20.0",
     "fire>=0.7.1",

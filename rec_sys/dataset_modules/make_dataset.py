@@ -4,7 +4,10 @@ import torch
 from omegaconf import DictConfig
 from torch.utils.data import random_split
 
-from rec_sys.dataset_modules.cols_data.create_parquet import preprocess_reviews_to_vectorized_df, save_user_parquet
+from rec_sys.dataset_modules.cols_data.create_parquet import (
+    preprocess_reviews_to_vectorized_df,
+    save_user_parquet,
+)
 from rec_sys.dataset_modules.dataset import HeteroDataLoader
 from rec_sys.dataset_modules.graph_data.create_graphs import build_user_graphs
 
@@ -20,7 +23,7 @@ def prepare_data(
     batch_size: int,
     words_fields: list[str],
     user_field: str,
-    eval_ratio: float
+    eval_ratio: float,
 ):
     """Создает parquet и графы, если их нет."""
 
@@ -48,10 +51,9 @@ def prepare_data(
     graphs_dir.mkdir(parents=True, exist_ok=True)
     if not any(graphs_dir.iterdir()):
         build_user_graphs(
-            user_dir=unique_user_dir,
-            save_dir=graphs_dir,
-            eval_ratio=eval_ratio
+            user_dir=unique_user_dir, save_dir=graphs_dir, eval_ratio=eval_ratio
         )
+
 
 def create_loaders(cfg: DictConfig):
     """Создает train/test DataLoader’ы из готовых графов."""
@@ -67,13 +69,13 @@ def create_loaders(cfg: DictConfig):
         train_dataset,
         batch_size=cfg.dataset.batch_size,
         num_workers=cfg.dataset.num_workers,
-        shuffle=True
+        shuffle=True,
     )
     test_loader = HeteroDataLoader(
         test_dataset,
         batch_size=cfg.dataset.batch_size,
         num_workers=cfg.dataset.num_workers,
-        shuffle=False
+        shuffle=False,
     )
 
     return train_loader, test_loader

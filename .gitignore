@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.py[co]
+*.so
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+env/
+venv/
+*.env
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+workspace.xml
+
+# Logs
+*.log
+lightning_logs/
+mlruns/
+outputs/
+checkpoints/
+
+# Data
+raw_data/
+dataset/
+graphs/
+users_dir/
+
+# DVC
+.dvc/tmp/
+
+# Node
+node_modules/
+
+# Pip
+pip-log.txt
+get-pip.py
+
+# Misc
+*.swp
+*.swo
+*.DS_Store
+
+# Lock files
+uv.lock
+
+# Temporary / virtual documents
+.virtual_documents/
+/dataset
+/raw_data
+/users_dir
+/graphs
