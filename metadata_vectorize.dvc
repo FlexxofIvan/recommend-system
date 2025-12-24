@@ -1,0 +1,6 @@
+outs:
+- md5: b3acfe18246cfc2744d0ddc222967e5c.dir
+  size: 33253450
+  nfiles: 1
+  hash: md5
+  path: metadata_vectorize
