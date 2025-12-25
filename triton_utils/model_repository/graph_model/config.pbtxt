@@ -1,0 +1,50 @@
+name: "graph_model"
+platform: "onnxruntime_onnx"
+max_batch_size: 32
+
+input [
+  {
+    name: "user_features"
+    data_type: TYPE_FP32
+    dims: [-1, 384]  # пример: 64 признака на пользователя
+  },
+  {
+    name: "product_info_features"
+    data_type: TYPE_FP32
+    dims: [-1, 384] # пример: 128 признака на продукт
+  },
+  {
+    name: "product_name_features"
+    data_type: TYPE_FP32
+    dims: [-1, 384]  # пример: 32 признака на имя продукта
+  },
+  {
+    name: "edge_index"
+    data_type: TYPE_INT64
+    dims: [2, -1]   # [2, num_edges]
+  },
+  {
+    name: "edge_attr"
+    data_type: TYPE_FP32
+    dims: [-1, 384]  # пример: 16 признаков на ребро
+  }
+]
+
+output [
+  {
+    name: "user_emb"
+    data_type: TYPE_FP32
+    dims: [-1, 64]
+  },
+  {
+    name: "prod_emb"
+    data_type: TYPE_FP32
+    dims: [-1, 64]
+  }
+]
+
+instance_group [
+  {
+    kind: KIND_GPU
+  }
+]
