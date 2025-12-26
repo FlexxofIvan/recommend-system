@@ -78,6 +78,12 @@ $$
 
 `uv sync`
 
+Возможно придется прописать еще:
+
+```bash
+  uv add sentence-transformers
+```
+
 4. ***Установка и запуска pre-commit:**
 ```bash
 uv run pre-commit install
@@ -146,6 +152,7 @@ from rec_sys.dataset_modules.cols_data.vector_data_utils import vectorize_df
     ./config/model/model_config.yaml \
     --output_path=./triton_utils/model_repository/graph_model/1/model.onnx
 ```
+
 
 
 
