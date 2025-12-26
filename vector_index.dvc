@@ -1,0 +1,6 @@
+outs:
+- md5: 37de6f0975515d8f348374f8ccd933d7.dir
+  size: 4937675
+  nfiles: 2
+  hash: md5
+  path: vector_index
