@@ -46,9 +46,9 @@
 После этого выполняется **message passing** с использованием **attention** с применением одного из алгоритмов графовых нейронных сетей, таких как **GAT** (Graph Attention Network) или **TransformerConv**. Эти алгоритмы доступны в библиотеке **PyTorch Geometric** (https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.conv.TransformerConv.html).
 
 Формула для финальной функции потерь (лосс-функции):
-
-$$ \text{loss} = \frac{5}{2} \times (\text{cos\_sim}(\text{cust\_emb}, \text{prod\_emb}) + 1) $$
-
+$$
+\text{loss} = \frac{5}{2} \times (\text{cos\_sim}(\texttt{cust\_emb}, \texttt{prod\_emb}) + 1)
+$$
 где:
 - `cust_emb` — эмбеддинг пользователя
 - `prod_emb` — эмбеддинг продукта
@@ -59,6 +59,7 @@ $$ \text{loss} = \frac{5}{2} \times (\text{cos\_sim}(\text{cust\_emb}, \text{pro
 - `asin` — Уникальный идентификатор товара
 
 Этот датасет будет использован для построения рекомендательной системы и генерации персонализированных рекомендаций.
+
 
 
 
