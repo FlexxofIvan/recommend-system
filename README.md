@@ -81,7 +81,46 @@ $$
 4. ***Установка и запуска pre-commit:**
 ```bash
 uv run pre-commit install
+uv run pre-commit run -a
 ```
+
+## Train
+
+```bash
+ uv run -m rec_sys.train.train
+```
+Подгружает данные для обучения с гугл диска, обучает модель на них.
+
+### Inference
+
+Для инференса необходимо прописать в:
+
+```bash
+  config/infer_config.yaml 
+```
+путь до нужного чекпоинта.
+
+Затем создать векторную базу данных для продуктов:
+```bash
+  uv run -m rec_sys.vector_database.create_vectorbase
+```
+
+Сам инференс:
+```bash
+  uv run -m rec_sys.inference.infer
+```
+
+### Production Preparation
+
+Экспортируем нужную нам модель:
+```bash
+  uv run python -m rec_sys.modules.model_export \
+    ./checkpoints/<checkpoint name> \
+    ./config/model/model_config.yaml \
+    --output_path=./triton_utils/model_repository/graph_model/1/model.onnx
+```
+
+
 
 
 
