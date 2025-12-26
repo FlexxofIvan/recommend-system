@@ -110,6 +110,33 @@ uv run pre-commit run -a
   uv run -m rec_sys.inference.infer
 ```
 
+Модель ожидает следующий формат данных:
+```bash
+inputs = {
+    "user_features": None,
+    "product_info_features": None,
+    "product_name_features": None,
+    "edge_index": None,
+    "edge_attr": None,
+}
+```
+получить нужные фичи можно, прогнав входные данные, приведеные к датафрейму (их вид):
+```bash
+{
+  "reviewerID": "string_value",
+  "asin": "string_value",
+  "verified": true,
+  "score": 4.5,
+  "product_name": "string_value",
+  "product_info": "string_value",
+  "comment": "string_value"
+}
+```
+через:
+```bash
+from rec_sys.dataset_modules.cols_data.vector_data_utils import vectorize_df
+```
+
 ### Production Preparation
 
 Экспортируем нужную нам модель:
@@ -119,6 +146,7 @@ uv run pre-commit run -a
     ./config/model/model_config.yaml \
     --output_path=./triton_utils/model_repository/graph_model/1/model.onnx
 ```
+
 
 
 
