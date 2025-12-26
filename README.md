@@ -154,7 +154,28 @@ from rec_sys.dataset_modules.cols_data.vector_data_utils import vectorize_df
 ```
 
 
+### Launch 
 
+```bash
+  docker compose build --no-cache
+  docker compose up
+  docker ps
+```
+
+Сервер доступен по адресу https://0.0.0.0:8080
+
+Если докер не запустился, то:
+```bash
+docker run --gpus all --rm \
+  -p8000:8000 -p8001:8001 -p8002:8002 \
+  -v $(pwd)/triton_utils/model_repository:/models \
+  nvcr.io/nvidia/tritonserver:25.11-py3 \
+  tritonserver --model-repository=/models
+```
+
+```bash
+uv run uvicorn triton_utils.web_spp:app --reload --port 8080
+```
 
 
 
