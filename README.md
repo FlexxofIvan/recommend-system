@@ -74,11 +74,14 @@ $$
    
 `cd recommend-system`
 
-4. **Установите зависимости с помощью uv:**
+3. **Установите зависимости с помощью uv:**
 
 `uv sync`
 
-
+4. ***Установка и запуска pre-commit:**
+```bash
+uv run pre-commit install
+```
 
 
 
