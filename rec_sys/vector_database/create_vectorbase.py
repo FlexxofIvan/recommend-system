@@ -35,7 +35,7 @@ def main(cfg: DictConfig):
     model.load_state_dict(state_dict)
     model.eval()
     with torch.no_grad():
-        prod_vecs = model(
+        _ , prod_vecs = model(
             prods_only=True,
             product_info_features=desc_feat,
             product_name_features=name_feat,

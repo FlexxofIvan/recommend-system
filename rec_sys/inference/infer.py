@@ -32,7 +32,6 @@ def main(cfg: DictConfig):
     mapping_path = Path(cfg.vector_db.mapping_path)
 
     dim = user_embs.shape[1]
-
     index, prod_idxs = load_index(index_path, mapping_path, dim)
     rec_products = []
     for query_vec in user_embs:
