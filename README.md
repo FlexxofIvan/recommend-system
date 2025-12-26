@@ -62,5 +62,19 @@ $$
 
 
 
+## Setup
+
+Для настройки проекта выполните следующие шаги:
+
+1. **Клонируйте репозиторий:**
+
+`git clone https://github.com/FlexxofIvan/recommend-system.git`
+
+Перейдите в директорию проекта:
+`cd recommend-system`
+
+Установите зависимости с помощью uv:
+`uv sync`
+
 
 
