@@ -1,25 +1,24 @@
 version: "3.13.8"
 
+
 services:
   triton:
     image: nvcr.io/nvidia/tritonserver:25.11-py3
     container_name: triton
-    runtime: nvidia
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    device_requests:
+      - driver: nvidia
+        count: all
+        capabilities: [gpu]
     ports:
-      - "8000:8000" # HTTP
-      - "8001:8001" # gRPC
-      - "8002:8002" # metrics
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
     volumes:
       - ./triton_utils/model_repository:/models
     command: >
-      tritonserver --model-repository=/models
+      tritonserver
+      --model-repository=/models
+      --strict-model-config=false
 
   web:
     build: .
@@ -29,7 +28,5 @@ services:
     volumes:
       - ./triton_utils:/app/triton_utils
     working_dir: /app
-    command: >
-      uvicorn triton_utils.web_spp:app --reload --host 0.0.0.0 --port 8080 --log-level debug
     depends_on:
       - triton
