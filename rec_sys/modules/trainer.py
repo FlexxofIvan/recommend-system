@@ -44,7 +44,6 @@ class GraphRecSysPL(pl.LightningModule):
         self.val_f1 = F1Score(task="binary")
         self.val_acc = Accuracy(task="binary")
 
-
     def _build_model_kwargs(self, batch, user_mode: bool):
         if user_mode:
             product_node = PRODUCT_TRAIN_NODE
