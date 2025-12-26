@@ -97,6 +97,11 @@ uv run pre-commit run -a
 ```
 Подгружает данные для обучения с гугл диска, обучает модель на них.
 
+MlFlow:
+```bash
+  uv run mlflow ui --host 127.0.0.1 --port 8080
+```
+
 ### Inference
 
 Для инференса необходимо прописать в:
@@ -191,6 +196,7 @@ docker run --gpus all --rm \
 ```bash
 uv run uvicorn triton_utils.web_spp:app --reload --port 8080
 ```
+
 
 
 
