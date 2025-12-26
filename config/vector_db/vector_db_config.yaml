@@ -1,0 +1,5 @@
+source_metadata_path: ./metadata_vectorize
+index_path: ./vector_index/products.ann
+mapping_path: ./vector_index/prod_idx_map.pkl
+top_k: 5
+dim: 64

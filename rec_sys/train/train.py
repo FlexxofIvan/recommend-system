@@ -3,8 +3,8 @@ from pathlib import Path
 
 import hydra
 import pytorch_lightning as pl
-import torch
 from omegaconf import DictConfig
+from pytorch_lightning.callbacks import TQDMProgressBar
 from pytorch_lightning.loggers import MLFlowLogger
 
 from rec_sys.dataset_modules.make_dataset import create_loaders
@@ -22,10 +22,11 @@ def main(cfg: DictConfig):
     mlf_logger = MLFlowLogger(experiment_name="graph_rec", tracking_uri="file:./mlruns")
     trainer = pl.Trainer(
         max_epochs=cfg.train.epochs,
-        accelerator="gpu" if torch.cuda.is_available() else "cpu",
-        devices=1 if torch.cuda.is_available() else None,
+        accelerator="auto",
+        devices=1,
         log_every_n_steps=10,
         logger=mlf_logger,
+        callbacks=[TQDMProgressBar(refresh_rate=10)],
     )
     trainer.validate(pl_model, dataloaders=test_loader)
     trainer.fit(pl_model, train_dataloaders=train_loader, val_dataloaders=test_loader)

@@ -4,6 +4,8 @@ import torch.nn.functional as F
 from torchmetrics import Accuracy, F1Score
 
 from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (
+    ASIN,
+    EDGE_INDEX,
     FEAT_PRODUCT_INFO,
     FEAT_PRODUCT_NAME,
     PRODUCT_TEST_NODE,
@@ -26,7 +28,7 @@ def _build_model_kwargs(batch, train: bool):
         user_features=batch[USER_NODE][USER_EMB],
         product_info_features=batch[product_node][FEAT_PRODUCT_INFO],
         product_name_features=batch[product_node][FEAT_PRODUCT_NAME],
-        edge_index=batch[PRODUCT_TRAIN_NODE, USER_REL_PRODUCT, USER_NODE]["edge_index"],
+        edge_index=batch[PRODUCT_TRAIN_NODE, USER_REL_PRODUCT, USER_NODE][EDGE_INDEX],
         edge_attr=batch[PRODUCT_TRAIN_NODE, USER_REL_PRODUCT, USER_NODE][
             USER_REL_PRODUCT
         ],
@@ -53,7 +55,7 @@ class GraphRecSysPL(pl.LightningModule):
             product_info_features=batch[product_node][FEAT_PRODUCT_INFO],
             product_name_features=batch[product_node][FEAT_PRODUCT_NAME],
             edge_index=batch[PRODUCT_TRAIN_NODE, USER_REL_PRODUCT, USER_NODE][
-                "edge_index"
+                EDGE_INDEX
             ],
             edge_attr=batch[PRODUCT_TRAIN_NODE, USER_REL_PRODUCT, USER_NODE][
                 USER_REL_PRODUCT
@@ -64,13 +66,14 @@ class GraphRecSysPL(pl.LightningModule):
         kwargs = self._build_model_kwargs(batch, user_mode=user_mode)
 
         if prods_only:
-            return self.model(
+            _, prod_embs = self.model(
                 prods_only=True,
                 product_info_features=kwargs["product_info_features"],
                 product_name_features=kwargs["product_name_features"],
             )
-
-        return self.model(prods_only=False, **kwargs)
+            return prod_embs
+        user_emb, prod_emb = self.model(prods_only=False, **kwargs)
+        return user_emb, prod_emb
 
     def training_step(self, batch, batch_idx):
         mask = batch[PRODUCT_TRAIN_NODE].batch
@@ -93,7 +96,7 @@ class GraphRecSysPL(pl.LightningModule):
         )
         return loss
 
-    def validation_step(self, batch):
+    def validation_step(self, batch, batch_idx):
         mask = batch[PRODUCT_TEST_NODE].batch
         batch_size = torch.max(mask) + 1
 
@@ -133,13 +136,7 @@ class GraphRecSysPL(pl.LightningModule):
             prods_only=False,
             user_mode=True,
         )
-
-        prod_emb = self(
-            batch,
-            prods_only=True,
-            user_mode=False,
-        )
-        return user_emb, prod_emb
+        return user_emb, batch[PRODUCT_TEST_NODE][ASIN]
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.model.parameters(), lr=self.lr)

@@ -1,4 +1,5 @@
-from collections import OrderedDict
+import random
+from pathlib import Path
 
 import fire
 import torch
@@ -7,13 +8,11 @@ from torch.export import Dim
 
 from rec_sys.dataset_modules.graph_data.graph_data_utils import make_edges
 from rec_sys.modules.neural_models import GraphModel
-from pathlib import Path
-import random
-
 from triton_utils.triton_wrapper import TritonWrapper
 
 hidden_dim = 384
 max_products = 60
+
 
 def export_onnx(checkpoint_path: str, model_config_path: Path, output_path: str):
 
@@ -38,19 +37,32 @@ def export_onnx(checkpoint_path: str, model_config_path: Path, output_path: str)
     wrapper = TritonWrapper(model)
     torch.onnx.export(
         wrapper,
-        (dummy_user_features, dummy_product_info_features, dummy_product_name_features, dummy_edge_index,
-         dummy_edge_attr),
+        (
+            dummy_user_features,
+            dummy_product_info_features,
+            dummy_product_name_features,
+            dummy_edge_index,
+            dummy_edge_attr,
+        ),
         output_path,
-        input_names=["user_features", "product_info_features", "product_name_features", "edge_index", "edge_attr"],
+        input_names=[
+            "user_features",
+            "product_info_features",
+            "product_name_features",
+            "edge_index",
+            "edge_attr",
+        ],
         output_names=["user_emb", "prod_emb"],
         opset_version=18,
         dynamic_shapes={
             "user_features": {0: Dim("num_users", min=1, max=None)},
             "product_info_features": {0: Dim("num_products", min=1, max=max_products)},
             "product_name_features": {0: Dim("num_products", min=1, max=max_products)},
-            "edge_index": {1: Dim("num_edges", min=1, max=max_products * (max_products - 1))},
-            "edge_attr": {0: Dim("num_products", min=1, max=max_products)}
-        }
+            "edge_index": {
+                1: Dim("num_edges", min=1, max=max_products * (max_products - 1))
+            },
+            "edge_attr": {0: Dim("num_products", min=1, max=max_products)},
+        },
     )
 
     print(f"ONNX модель сохранена в {output_path}")

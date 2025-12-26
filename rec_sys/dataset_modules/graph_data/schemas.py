@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, field_validator
 from torch_geometric.data import HeteroData
 
 from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (
+    ASIN,
     FEAT_COMMENT,
     FEAT_PRODUCT_INFO,
     FEAT_PRODUCT_NAME,
@@ -19,6 +20,7 @@ from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (
 class UserRow(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
+    asin: pl.Series
     product_info: pl.Series
     comment: pl.Series
     product_name: pl.Series
@@ -53,6 +55,7 @@ class UserRow(BaseModel):
                 return torch.tensor(s, dtype=torch.float32)
 
         return {
+            ASIN: self.asin,
             FEAT_PRODUCT_INFO: series_to_tensor(self.product_info),
             FEAT_COMMENT: series_to_tensor(self.comment),
             FEAT_PRODUCT_NAME: series_to_tensor(self.product_name),

@@ -1,3 +1,5 @@
+from typing import Optional
+
 import torch
 import torch.nn as nn
 from torch_geometric.nn import TransformerConv
@@ -178,16 +180,17 @@ class GraphModel(nn.Module):
 
     def forward(
         self,
-        *,
         prods_only: bool,
         product_info_features: torch.Tensor,
         product_name_features: torch.Tensor,
-        user_features: torch.Tensor | None = None,
-        edge_index: torch.Tensor | None = None,
-        edge_attr: torch.Tensor | None = None,
+        user_features: Optional[torch.Tensor] = None,
+        edge_index: Optional[torch.Tensor] = None,
+        edge_attr: Optional[torch.Tensor] = None,
     ):
         if prods_only:
-            return self.product_vec_generate(
+            return torch.zeros(
+                1, product_info_features.size(1)
+            ), self.product_vec_generate(
                 product_info_features,
                 product_name_features,
             )
@@ -218,3 +221,21 @@ class GraphModel(nn.Module):
         )
 
         return out[:user_size], product_emb
+
+    def forward_triton(
+        self,
+        user_features,
+        product_info_features,
+        product_name_features,
+        edge_index,
+        edge_attr,
+    ):
+        user_emb, _ = self.forward(
+            user_features=user_features,
+            product_info_features=product_info_features,
+            product_name_features=product_name_features,
+            edge_index=edge_index,
+            edge_attr=edge_attr,
+            prods_only=False,
+        )
+        return user_emb

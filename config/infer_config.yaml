@@ -1,3 +1,7 @@
 defaults:
   - data: infer_loader
   - model: model_config
+  - vector_db: vector_db_config
+  - _self_
+
+checkpoint: ./checkpoints/graph_recsys_2025-12-25_02-34-28.ckpt

@@ -2,7 +2,7 @@
 # Base
 # -------------------------
 base:
-  dir: /home/ivan/Desktop/RecSys
+  dir: .
 
 # -------------------------
 # Directories
@@ -39,4 +39,5 @@ dataset:
   batch_size: 64
   test_size: 0.1
   num_workers: 8
+  vector_size: 384
   seed: 42

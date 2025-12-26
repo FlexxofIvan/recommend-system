@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import torch
+from hydra.utils import get_original_cwd
 from omegaconf import DictConfig
 from torch.utils.data import random_split
 
@@ -10,6 +11,7 @@ from rec_sys.dataset_modules.cols_data.create_parquet import (
 )
 from rec_sys.dataset_modules.dataset import HeteroDataLoader
 from rec_sys.dataset_modules.graph_data.create_graphs import build_user_graphs
+from rec_sys.dataset_modules.outer_data_utils import ensure_data_available
 
 
 def prepare_data(
@@ -57,8 +59,12 @@ def prepare_data(
 
 def create_loaders(cfg: DictConfig):
     """Создает train/test DataLoader’ы из готовых графов."""
-    out_graph_file = Path(cfg.dirs.graphs)
-    graphs_list = [torch.load(f, weights_only=False) for f in out_graph_file.iterdir()]
+    rel_graphs = Path(cfg.dirs.graphs)
+    PROJECT_ROOT = Path(get_original_cwd())
+    out_graph_file = Path(cfg.dirs.load_path)
+    ensure_data_available(out_graph_file)
+    graphs_dir = PROJECT_ROOT / rel_graphs
+    graphs_list = [torch.load(f, weights_only=False) for f in graphs_dir.iterdir()]
 
     full_size = len(graphs_list)
     test_size = int(full_size * cfg.dataset.test_size)

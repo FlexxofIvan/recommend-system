@@ -9,10 +9,12 @@ TARGET = "target"
 USER_EMB = "x"
 
 USER_NODE = "user"
+PRODUCT_INFERENCE_NODE = "product"
 PRODUCT_TRAIN_NODE = "product_train"
 PRODUCT_TEST_NODE = "product_test"
 USER_REL_PRODUCT = "comments"
-
+EDGE_INDEX = "edge_index"
+ASIN = "asin"
 
 template = {
     "user": {"x": None, "num_nodes": None},

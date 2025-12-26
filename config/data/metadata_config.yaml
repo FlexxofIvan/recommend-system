@@ -1,0 +1,8 @@
+model_name: "all-MiniLM-L6-v2"
+words_fields: ["name", "description"]
+mus_file: ./raw_data/mus_instr.json
+meta_file: ./raw_data/meta_instr.json
+output_path: ./metadata_vectorize/meta_vectors.parquet
+max_title_length: 10
+max_desc_length: 15
+batch_size: 64

@@ -1,6 +1,6 @@
 name: "graph_model"
 platform: "onnxruntime_onnx"
-max_batch_size: 32
+max_batch_size: 0
 
 input [
   {
@@ -33,11 +33,6 @@ input [
 output [
   {
     name: "user_emb"
-    data_type: TYPE_FP32
-    dims: [-1, 64]
-  },
-  {
-    name: "prod_emb"
     data_type: TYPE_FP32
     dims: [-1, 64]
   }

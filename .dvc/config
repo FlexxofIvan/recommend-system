@@ -1,0 +1,8 @@
+[core]
+    remote = gdrive
+['remote "gdrive"']
+    url = gdrive://1IvYrR02LNJtoRYyoizAB7JW012i3avuD
+    gdrive_use_service_account = false
+    gdrive_service_account_json_file_path = /home/ivan/.config/dvc/gdrive-sa.json
+    gdrive_client_id = 706429498580-ajbspm4irksqkfddpsjv5e570vc3qc34.apps.googleusercontent.com
+    gdrive_client_secret = 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

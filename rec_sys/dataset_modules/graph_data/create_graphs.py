@@ -8,9 +8,11 @@ from rec_sys.dataset_modules.graph_data.graph_data_utils import (
     split_tensors,
 )
 from rec_sys.dataset_modules.graph_data.graph_dataset_constants import (
+    ASIN,
     FEAT_COMMENT,
     FEAT_PRODUCT_INFO,
     FEAT_PRODUCT_NAME,
+    PRODUCT_INFERENCE_NODE,
     PRODUCT_TEST_NODE,
     PRODUCT_TRAIN_NODE,
     TARGET,
@@ -24,6 +26,41 @@ from rec_sys.dataset_modules.graph_data.schemas import (
     NodeData,
     UserRow,
 )
+
+
+def vec_data_to_graph(vect_df: pl.DataFrame):
+    data_dict = {key: vect_df[key] for key in vect_df.columns}
+    user_row = UserRow(**data_dict)
+    features_tensor_dict = user_row.to_tensors()
+    avg_user_vec = torch.mean(features_tensor_dict[FEAT_COMMENT], dim=0).unsqueeze(0)
+    nodes_data = {
+        USER_NODE: NodeData(features={USER_EMB: avg_user_vec}, num_nodes=1),
+        PRODUCT_INFERENCE_NODE: NodeData(
+            features={
+                FEAT_PRODUCT_NAME: features_tensor_dict[FEAT_PRODUCT_NAME],
+                FEAT_PRODUCT_INFO: features_tensor_dict[FEAT_PRODUCT_INFO],
+                TARGET: features_tensor_dict[TARGET],
+            },
+            num_nodes=features_tensor_dict[FEAT_PRODUCT_INFO].shape[0],
+        ),
+    }
+
+    train_num_nodes = features_tensor_dict[FEAT_PRODUCT_INFO].shape[0]
+    edge_index = make_edges(train_num_nodes)
+
+    edges_data = [
+        EdgeData(
+            src=PRODUCT_INFERENCE_NODE,
+            dst=USER_NODE,
+            rel=USER_REL_PRODUCT,
+            edge_index=edge_index,
+            edge_features={USER_REL_PRODUCT: features_tensor_dict[FEAT_COMMENT]},
+        )
+    ]
+
+    builder = HeteroGraphBuilder()
+    bipart_data = builder.build_graph(nodes_data, edges_data)
+    return bipart_data
 
 
 def build_user_graphs(
@@ -46,7 +83,6 @@ def build_user_graphs(
     for num, file in enumerate(user_dir.iterdir()):
         user_df = pl.read_parquet(file)
         data_dict = {key: user_df[key] for key in user_df.columns}
-
         user_row = UserRow(**data_dict)
         features_tensor_dict = user_row.to_tensors()
 
@@ -63,6 +99,8 @@ def build_user_graphs(
 
         train_num_nodes = train[FEAT_PRODUCT_INFO].shape[0]
         test_num_nodes = test[FEAT_PRODUCT_INFO].shape[0]
+
+        test_asin = test[ASIN]
 
         binary_marks = (train[TARGET] > target_threshold).long()
         count = torch.bincount(binary_marks, minlength=2)
@@ -81,6 +119,7 @@ def build_user_graphs(
             ),
             PRODUCT_TEST_NODE: NodeData(
                 features={
+                    ASIN: test_asin,
                     FEAT_PRODUCT_NAME: test[FEAT_PRODUCT_NAME],
                     FEAT_PRODUCT_INFO: test[FEAT_PRODUCT_INFO],
                     TARGET: test[TARGET],

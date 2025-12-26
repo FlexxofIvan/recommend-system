@@ -1,6 +1,6 @@
 dirs:
-  graphs: /home/ivan/Desktop/RecSys/graphs/pt_test_graphs
-
+  graphs: ./graphs/pt_test_graphs
+  load_path: ./graphs
 dataset:
   batch_size: 64
   num_workers: 8

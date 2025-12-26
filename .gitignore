@@ -58,3 +58,5 @@ uv.lock
 /raw_data
 /users_dir
 /graphs
+/metadata_vectorize
+/vector_index
