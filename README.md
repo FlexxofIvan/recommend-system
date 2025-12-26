@@ -152,7 +152,22 @@ from rec_sys.dataset_modules.cols_data.vector_data_utils import vectorize_df
     ./config/model/model_config.yaml \
     --output_path=./triton_utils/model_repository/graph_model/1/model.onnx
 ```
+Для дальнейшего использования понадобится либо уже созданная модель и датабаза:
+```bash
+uv run dvc pull triton_utils/model_repository/graph_model/1/model.onnx.dvc
+uv run dvc pull triton_utils/model_repository/graph_model/1/model.onnx.data.dvc
+uv run dvc pull vector_index.dvc
+```
 
+либо надо создать базу данных нужной моделью, указав в infer_config нужный чекпоинт, и экспортировать эту же модель:
+```bash
+uv run -m rec_sys.vector_database.create_vectorbase
+
+  uv run python -m rec_sys.modules.model_export \
+    ./checkpoints/<checkpoint name> \
+    ./config/model/model_config.yaml \
+    --output_path=./triton_utils/model_repository/graph_model/1/model.onnx
+```
 
 ### Launch 
 
@@ -176,6 +191,7 @@ docker run --gpus all --rm \
 ```bash
 uv run uvicorn triton_utils.web_spp:app --reload --port 8080
 ```
+
 
 
 
