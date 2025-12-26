@@ -70,11 +70,12 @@ $$
 
 `git clone https://github.com/FlexxofIvan/recommend-system.git`
 
-Перейдите в директорию проекта:
+2. **Перейдите в директорию проекта:**
 `cd recommend-system`
 
-Установите зависимости с помощью uv:
+3. **Установите зависимости с помощью uv:**
 `uv sync`
+
 
 
 
