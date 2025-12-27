@@ -214,5 +214,5 @@ docker run --gpus all --rm \
 ```
 
 ```bash
-uv run uvicorn triton_utils.web_spp:app --reload --port 8080
+uv run uvicorn triton_utils.web_app:app --reload --port 8080
 ```
